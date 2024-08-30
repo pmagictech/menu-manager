@@ -1,0 +1,55 @@
+services:
+    web:
+        build: ./
+        volumes:
+            - .docker/000-default.conf:/etc/apache2/sites-available/000-default.conf
+            - .docker/php.ini:/usr/local/etc/php/php.ini
+            - ./:/var/www/html
+        user: "1000"
+        ports:
+            - 8000:80
+        depends_on:
+            - database
+        extra_hosts:
+            - host.docker.internal:host-gateway
+
+    database:
+        image: mysql:8.0.39-bookworm
+        volumes:
+            - menu-manager-db:/var/lib/mysql
+        env_file:
+            - .env
+        environment:
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+            - MYSQL_DATABASE=${DB_DATABASE}
+            - MYSQL_USER=${DB_USERNAME}
+            - MYSQL_PASSWORD=${DB_PASSWORD}
+
+    pma:
+        image: phpmyadmin:latest
+        ports:
+            - 8080:80
+        depends_on:
+            - database
+        environment:
+            - PMA_HOST=database
+
+    tailwind:
+        image: node:18-alpine
+        user: "1000"
+        tty: true
+        ports:
+            - 5173:5173
+        working_dir: /frontend
+        volumes:
+        - ./:/frontend
+        command: npm run dev
+
+    mailhog:
+        image: mailhog/mailhog:latest
+        ports:
+        - 1025:1025
+        - 8025:8025
+
+volumes:
+    menu-manager-db:
