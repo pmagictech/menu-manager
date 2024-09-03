@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use App\Models\Menu;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -34,6 +35,10 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'flash' => [
+                'message' => fn() => $request->session()->get('message')
+            ],
+            'menus' => fn() => $request->user() ? Menu::with('children.children.children')->where('parent_id', 0)->get() : [],
         ];
     }
 }
