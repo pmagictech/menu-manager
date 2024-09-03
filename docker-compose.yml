@@ -34,7 +34,7 @@ services:
         environment:
             - PMA_HOST=database
 
-    tailwind:
+    node:
         image: node:18-alpine
         user: "1000"
         tty: true
