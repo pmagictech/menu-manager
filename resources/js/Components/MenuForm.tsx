@@ -42,7 +42,7 @@ export default function MenuForm({ menu, showForm, hideForm }: menuFromProps) {
         e.preventDefault();
 
         post(route("menu.update"), {
-            only: ['menus'],
+            preserveState: false,
             onSuccess: ({ props }) => {
                 setMsg(
                     (props as PageProps & { errors: Errors & ErrorBag }).flash

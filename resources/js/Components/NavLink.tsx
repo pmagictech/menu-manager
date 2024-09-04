@@ -1,21 +1,25 @@
-import { Menu } from "@/types";
-import { InertiaLinkProps, Link } from "@inertiajs/react";
+import { Menu, PageProps } from "@/types";
+import { InertiaLinkProps, Link, usePage } from "@inertiajs/react";
 import { useState } from "react";
-import ParentIcon from "./ParentIcon";
 import ChildIcon from "./ChildIcon";
+import ParentIcon from "./ParentIcon";
+
+type NavLinkProps = InertiaLinkProps & { active: boolean; menu: Menu }
 
 export default function NavLink({
     active = false,
     className = "",
     menu: { name, children },
     ...props
-}: InertiaLinkProps & { active: boolean; menu: Menu }) {
-    const [open, setOpen] = useState(false);
+}: NavLinkProps) {
+    const { menuId } = usePage<PageProps>().props;
+
+    const [open, setOpen] = useState((children && children.length > 0 && children.some((child) => child.menu_id == menuId)) ?? false);
 
     return (
         <Link
             {...props}
-            onClick={(e) => children && e.preventDefault()}
+            onClick={(e) => children && children.length > 0 && e.preventDefault()}
             className={`focus:outline-none rounded-2xl transition duration-150 ease-in-out ${className} ${
                 open ? "block bg-gray-800" : ""
             }`}
@@ -40,8 +44,8 @@ export default function NavLink({
                 children.map((child) => (
                     <NavLink
                         key={child.id}
-                        active={child.name == "Menus"}
-                        href="#"
+                        active={child.menu_id == menuId}
+                        href={route("menu", child.menu_id)}
                         menu={child}
                     />
                 ))}

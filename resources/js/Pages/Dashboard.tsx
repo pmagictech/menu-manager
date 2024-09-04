@@ -8,7 +8,7 @@ import { useState } from "react";
 
 export default function Dashboard({ auth, menus }: PageProps) {
     const [showForm, setShowForm] = useState(false);
-    const [openAll, setOpenAll] = useState(false);
+    const [openAll, setOpenAll] = useState(true);
     const [menu, setMenu] = useState<Menu>({
         id: "",
         parent_id: "0",

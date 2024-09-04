@@ -13,7 +13,7 @@ export default function Authenticated({
 }: PropsWithChildren<{ user: User; header?: ReactNode }>) {
     const [showNavBar, setShowNavBar] = useState(false);
 
-    const { menus } = usePage<PageProps>().props;
+    const { menus, menuId } = usePage<PageProps>().props;
 
     return (
         <div className="min-h-screen bg-white text-gray-900 dark:text-gray-200 dark:bg-gray-900 3xl:container mx-auto">
@@ -81,8 +81,8 @@ export default function Authenticated({
                                 menus[0]?.children[0]?.children.map((menu) => (
                                     <NavLink
                                         key={menu.id}
-                                        active={false}
-                                        href="#"
+                                        active={menuId == menu.menu_id}
+                                        href={route("menu", menu.menu_id)}
                                         menu={menu}
                                     />
                                 ))}

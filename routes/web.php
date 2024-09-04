@@ -25,8 +25,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::post('/menu/update', [MenuController::class, 'update'])->name('menu.update');
     Route::get('api/menu/{id}', [MenuController::class, 'get'])->name('menu.get');
-    Route::get('/menu/{id}', function () {
-        return Inertia::render('Dashboard');
+    Route::get('/menu/{menuId}', function () {
+        return Inertia::render('Dashboard', [
+            'menuId' => Route::current()->parameter('menuId'),
+        ]);
     })->name('menu');
     Route::delete('/menu/update', [MenuController::class, 'destroy'])->name('menu.destroy');
 });
